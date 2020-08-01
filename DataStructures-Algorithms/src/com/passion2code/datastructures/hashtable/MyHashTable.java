@@ -14,7 +14,7 @@ public class MyHashTable<T> implements HashTable<T> {
 
 	private T arr[];
 	private int size = 0;
-	private final int CAPACITY = 10;
+	private static final int CAPACITY = 10;
 
 	@SuppressWarnings("unchecked")
 	public MyHashTable() {
@@ -24,29 +24,64 @@ public class MyHashTable<T> implements HashTable<T> {
 	@Override
 	public void insert(T data) {
 
-		// TODO check array size
+		// check array size
+		if (size > (arr.length / 2)) {
+			// auto - increment array size
+			incrementAndCopy();
+		}
 
 		int index = hash(data); // get hash code for the data
 
-		if (arr[index] != null) // if there is no collision
+		if (arr[index] == null) // if there is no collision
 			arr[index] = data; // insert item
 		else { // collision occurred
 			index = getNextEmptyIndex(index); // find the next empty cell and insert
-			arr[index] = data;
+			if (index != -1)
+				arr[index] = data;
+			else
+				System.err.println("Array is full. Cannot insert");
 		}
 
 		++this.size;
 	}
 
 	@Override
-	public void get(T data) {
-		// TODO Auto-generated method stub
+	public boolean find(T data) {
+		int index = hash(data);
 
+		if (arr[index].equals(data)) {
+			return true;
+		} else {
+			while (index < arr.length) {
+				if (arr[index].equals(data)) {
+					return true;
+				} else {
+					++index;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public boolean delete(T data) {
-		// TODO Auto-generated method stub
+
+		int index = hash(data);
+
+		if (arr[index].equals(data)) {
+			arr[index] = null;
+			return true;
+		} else {
+			while (index < arr.length) {
+				if (!arr[index].equals(data))
+					++index;
+				else {
+					arr[index] = null;
+					return true;
+				}
+			}
+		}
+		--this.size;
 		return false;
 	}
 
@@ -73,7 +108,6 @@ public class MyHashTable<T> implements HashTable<T> {
 
 		String str = (String) data;
 		char[] d = str.toCharArray();
-
 		int count = 0;
 
 		for (int i = 0; i < d.length; i++) {
@@ -88,8 +122,26 @@ public class MyHashTable<T> implements HashTable<T> {
 	}
 
 	private int getNextEmptyIndex(int index) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		while (index < this.arr.length) {
+			if (this.arr[index] != null) {
+				++index;
+			} else {
+				return index;
+			}
+		}
+		return -1;
+	}
+
+	private void incrementAndCopy() {
+		@SuppressWarnings("unchecked")
+		T[] newArr = (T[]) new Object[arr.length * 2];
+
+		for (int i = 0; i < arr.length; i++) {
+			newArr[i] = arr[i];
+		}
+
+		this.arr = newArr;
 	}
 
 }
