@@ -3,7 +3,7 @@ package com.passion2code.datastructures.arrayList;
 import java.util.Arrays;
 
 /**
- * This is my implementation of Java's "ArrayList". I am building this Data
+ * This is my own implementation of Java's "ArrayList". I am building this Data
  * Structure from Scratch
  */
 
@@ -35,8 +35,8 @@ public class MyArrayList<T> implements MyList<T> {
 
 	@Override
 	public Object get(int index) {
-		if (index >= 0 && index < arr.length)
-			return arr[index];
+		if (index >= 0 && index < this.arr.length)
+			return this.arr[index];
 		else
 			return null;
 	}
